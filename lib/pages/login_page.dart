@@ -1,6 +1,9 @@
+import '../widgets/button_style.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/custom_input.dart';
+import '../widgets/labels.dart';
+import '../widgets/logo.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -8,38 +11,25 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
         backgroundColor: Color(0xffF2F2F2),
         body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _Logo(),
-              _Form(),
-              _Labels(),
-              Text(
-                'Terminos y condiciones de uso',
-                style: TextStyle(fontWeight: FontWeight.w200),
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Logo(),
+                  _Form(),
+                  Labels(),
+                  Text(
+                    'Terminos y condiciones de uso',
+                    style: TextStyle(fontWeight: FontWeight.w200),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ));
-  }
-}
-
-class _Logo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 200,
-        margin: EdgeInsets.only(top: 80),
-        child: Column(
-          children: <Widget>[
-            Image(
-              image: AssetImage('assets/logo-castor.png'),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
 
@@ -73,45 +63,12 @@ class __FormState extends State<_Form> {
                 passCtrl, //Definimos que controladores queremos usar
             isPassword: true,
           ),
-          MaterialButton(
+          BlueButton(
+            text: 'Iniciar Sesión',
             onPressed: () {
               print(emailCtrl.text);
               print(passCtrl.text);
             },
-            child: Text('Login'),
-            color: Color.fromARGB(255, 6, 157, 180),
-            textColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Labels extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Text(
-            '¿No tienes una cuenta?',
-            style: TextStyle(
-                color: Colors.black54,
-                fontSize: 15,
-                fontWeight: FontWeight.w300),
-          ),
-          SizedBox(height: 10),
-          Text(
-            'Crea una cuenta',
-            style: TextStyle(
-                color: Colors.blue[600],
-                fontSize: 18,
-                fontWeight: FontWeight.bold),
           ),
         ],
       ),
