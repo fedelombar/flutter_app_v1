@@ -49,6 +49,9 @@ class _Form extends StatefulWidget {
 }
 
 class __FormState extends State<_Form> {
+  final emailCtrl = TextEditingController();
+  final passCtrl = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,19 +59,33 @@ class __FormState extends State<_Form> {
       padding: EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: <Widget>[
-          CustomInput(),
-          CustomInput(),
-
-          // MaterialButton(
-          //   onPressed: () {},
-          //   child: Text('Login'),
-          //   color: Color.fromARGB(255, 6, 157, 180),
-          //   textColor: Colors.white,
-          //   elevation: 0,
-          //   shape: RoundedRectangleBorder(
-          //     borderRadius: BorderRadius.circular(30),
-          //   ),
-          // ),
+          CustomInput(
+            icon: Icons.mail_outline,
+            placeholder: 'Correo',
+            textController:
+                emailCtrl, //Definimos que controladores queremos usar
+            keyboardType: TextInputType.emailAddress,
+          ),
+          CustomInput(
+            icon: Icons.lock_outline,
+            placeholder: 'Contraseña',
+            textController:
+                passCtrl, //Definimos que controladores queremos usar
+            isPassword: true,
+          ),
+          MaterialButton(
+            onPressed: () {
+              print(emailCtrl.text);
+              print(passCtrl.text);
+            },
+            child: Text('Login'),
+            color: Color.fromARGB(255, 6, 157, 180),
+            textColor: Colors.white,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
         ],
       ),
     );
