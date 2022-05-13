@@ -1,6 +1,13 @@
+import 'package:provider/provider.dart';
+
+import '../services/auth_service.dart';
+import '../widgets/button_style.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/custom_input.dart';
+import '../widgets/labels.dart';
+import '../widgets/logo.dart';
+import 'package:castor_app_v1/helpers/show_alert.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -8,38 +15,31 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
         backgroundColor: Color(0xffF2F2F2),
         body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _Logo(),
-              _Form(),
-              _Labels(),
-              Text(
-                'Terminos y condiciones de uso',
-                style: TextStyle(fontWeight: FontWeight.w200),
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Logo(
+                    title: 'Iniciar sesión',
+                  ),
+                  _Form(),
+                  Labels(
+                    route: 'register',
+                    title: '¿No tienes una cuenta?',
+                    subtitle: 'Registrate',
+                  ),
+                  Text(
+                    'Terminos y condiciones de uso',
+                    style: TextStyle(fontWeight: FontWeight.w200),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ));
-  }
-}
-
-class _Logo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 200,
-        margin: EdgeInsets.only(top: 80),
-        child: Column(
-          children: <Widget>[
-            Image(
-              image: AssetImage('assets/logo-castor.png'),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
 
@@ -49,52 +49,49 @@ class _Form extends StatefulWidget {
 }
 
 class __FormState extends State<_Form> {
+  final emailCtrl = TextEditingController();
+  final passCtrl = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: <Widget>[
-          CustomInput(),
-          CustomInput(),
-
-          // MaterialButton(
-          //   onPressed: () {},
-          //   child: Text('Login'),
-          //   color: Color.fromARGB(255, 6, 157, 180),
-          //   textColor: Colors.white,
-          //   elevation: 0,
-          //   shape: RoundedRectangleBorder(
-          //     borderRadius: BorderRadius.circular(30),
-          //   ),
-          // ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Labels extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Text(
-            '¿No tienes una cuenta?',
-            style: TextStyle(
-                color: Colors.black54,
-                fontSize: 15,
-                fontWeight: FontWeight.w300),
+          CustomInput(
+            icon: Icons.mail_outline,
+            placeholder: 'Correo',
+            textController:
+                emailCtrl, //Definimos que controladores queremos usar
+            keyboardType: TextInputType.emailAddress,
           ),
-          SizedBox(height: 10),
-          Text(
-            'Crea una cuenta',
-            style: TextStyle(
-                color: Colors.blue[600],
-                fontSize: 18,
-                fontWeight: FontWeight.bold),
+          CustomInput(
+            icon: Icons.lock_outline,
+            placeholder: 'Contraseña',
+            textController:
+                passCtrl, //Definimos que controladores queremos usar
+            isPassword: true,
+          ),
+          BlueButton(
+            text: 'Iniciar Sesión',
+            onPressed: authService.authenticated
+                ? () => {}
+                : () async {
+                    FocusScope.of(context).unfocus();
+
+                    final loginOk = await authService.login(
+                        emailCtrl.text.trim(), passCtrl.text.trim());
+
+                    if (loginOk) {
+                      Navigator.pushReplacementNamed(context, 'users');
+                    } else {
+                      ShowAlert(context, 'Login incorrecto',
+                          'Revise sus credenciales nuevamente');
+                    }
+                  },
           ),
         ],
       ),
