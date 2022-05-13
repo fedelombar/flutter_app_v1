@@ -1,9 +1,13 @@
+import 'package:provider/provider.dart';
+
+import '../services/auth_service.dart';
 import '../widgets/button_style.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/custom_input.dart';
 import '../widgets/labels.dart';
 import '../widgets/logo.dart';
+import 'package:castor_app_v1/helpers/show_alert.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -50,6 +54,8 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -71,10 +77,21 @@ class __FormState extends State<_Form> {
           ),
           BlueButton(
             text: 'Iniciar Sesión',
-            onPressed: () {
-              print(emailCtrl.text);
-              print(passCtrl.text);
-            },
+            onPressed: authService.authenticated
+                ? () => {}
+                : () async {
+                    FocusScope.of(context).unfocus();
+
+                    final loginOk = await authService.login(
+                        emailCtrl.text.trim(), passCtrl.text.trim());
+
+                    if (loginOk) {
+                      Navigator.pushReplacementNamed(context, 'users');
+                    } else {
+                      ShowAlert(context, 'Login incorrecto',
+                          'Revise sus credenciales nuevamente');
+                    }
+                  },
           ),
         ],
       ),

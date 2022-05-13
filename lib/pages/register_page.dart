@@ -86,7 +86,7 @@ class __FormState extends State<_Form> {
             keyboardType: TextInputType.number,
           ),
           BlueButton(
-            text: 'Iniciar Sesión',
+            text: 'Registrate ahora',
             onPressed: () {
               print(nameCtrl.text);
               print(surnameCtrl.text);
