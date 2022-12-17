@@ -1,4 +1,6 @@
-# castor_app_v1
+# flutter_app_v1
+
+Project Fintech
 
 A new Flutter project.
 
